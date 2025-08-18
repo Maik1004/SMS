@@ -30,20 +30,6 @@ ARCHIVO_USUARIO = "usuario_quien_ingresa.json"
 
 
 # Configuración de conexión a la DB usando variables de entorno
-DB_CONFIG = {
-    "host": os.getenv("DB_HOST", "trolley.proxy.rlwy.net"),
-    "user": os.getenv("DB_USER", "root"),
-    "password": os.getenv("DB_PASS", "kHPJBBeKyCVfZVXYtqqphugkbDWacctH"),
-    "database": os.getenv("DB_NAME", "railway"),
-    "port": int(os.getenv("DB_PORT", 27727))
-}
-
-def crear_conexion():
-    return mysql.connector.connect(**DB_CONFIG)
-
-
-
-
 
 # Estructura de salones
 SALONES_POR_GRADO = {
@@ -105,40 +91,48 @@ def guardar_configuracion(grado, salon, fecha_programada, mensaje=""):
 
 # Rutas de autenticación
 @app.route("/", methods=["GET", "POST"])
-@app.route("/login", methods=["GET", "POST"])
+DB_HOST = "trolley.proxy.rlwy.net"
+DB_PORT = 27727
+DB_USER = "root"
+DB_PASSWORD = "kHPJBBeKyCVfZVXYtqqphugkbDWacctH"
+DB_NAME = "railway"
+
+def crear_conexion():
+    return mysql.connector.connect(
+        host=DB_HOST,
+        port=DB_PORT,
+        user=DB_USER,
+        password=DB_PASSWORD,
+        database=DB_NAME
+    )
+
+# 🏠 Página principal
+@app.route("/")
+def home():
+    return render_template("login.html")  # tu plantilla con el formulario
+
+# 🔑 Ruta de login
+@app.route("/login", methods=["POST"])
 def login():
-    error = None
-    if request.method == "POST":
-        usuario = request.form["usuario"].strip()
-        contrasena = request.form["contrasena"].strip()
+    username = request.form.get("username")
+    password = request.form.get("password")
 
-        if not usuario or not contrasena:
-            error = "Todos los campos son obligatorios"
-        else:
-            contrasena_hash = hashlib.sha1(contrasena.encode()).hexdigest()
-            try:
-                conn = crear_conexion()
-                cursor = conn.cursor(dictionary=True)
-                cursor.execute(
-                    "SELECT * FROM usuarios WHERE username = %s AND password = %s", 
-                    (usuario, contrasena_hash)
-                )
-                resultado = cursor.fetchone()
-                cursor.close()
-                conn.close()
+    conn = crear_conexion()
+    cursor = conn.cursor(dictionary=True)
 
-                if resultado:
-                    datos = {"username": resultado["username"]}
-                    with open(ARCHIVO_USUARIO, "w") as f:
-                        json.dump(datos, f)
-                    return redirect(url_for("menu_principal"))
-                else:
-                    error = "Usuario o contraseña incorrectos"
+    query = "SELECT * FROM users WHERE username=%s AND password=%s"
+    cursor.execute(query, (username, password))
+    user = cursor.fetchone()
 
-            except mysql.connector.Error as e:
-                error = f"Error de conexión: {str(e)}"
+    cursor.close()
+    conn.close()
 
-    return render_template("login.html", error=error)
+    if user:
+        return f"✅ Bienvenido {user['username']}!"
+    else:
+        return "❌ Credenciales inválidas"
+
+
 
 @app.route("/menu")
 def menu_principal():
@@ -591,6 +585,6 @@ def enviar_sms_justvoip():
             print(f"📬 Respuesta: {respuesta.text}")
         except Exception as e:
             print(f"❌ Error al enviar a {numero}: {e}")
-
+# 🔥 Render necesita esto para correr con gunicorn
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
