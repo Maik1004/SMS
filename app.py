@@ -13,15 +13,9 @@ from flask import (Flask, flash, redirect, render_template, request,
                    send_from_directory, url_for)
 
 
-
-
-app = Flask(__name__)
-app.secret_key = "clave_secreta_segura"
-
-
 app = Flask(__name__)
 
-# ⚙️ Configuración de conexión (fuera de funciones, al inicio)
+# ⚙️ Configuración de conexión (afuera, no dentro de funciones)
 DB_HOST = "trolley.proxy.rlwy.net"
 DB_PORT = 27727
 DB_USER = "root"
@@ -60,9 +54,9 @@ def login():
     else:
         return "❌ Credenciales inválidas"
 
+# 🔥 Render lo ejecuta con gunicorn
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
-
 # Constantes globales
 ARCHIVO_CONFIG = "configuracion_mensajes.json"
 ARCHIVO_USUARIO = "usuario_quien_ingresa.json"
