@@ -19,6 +19,49 @@ app = Flask(__name__)
 app.secret_key = "clave_secreta_segura"
 
 
+app = Flask(__name__)
+
+# ⚙️ Configuración de conexión (fuera de funciones, al inicio)
+DB_HOST = "trolley.proxy.rlwy.net"
+DB_PORT = 27727
+DB_USER = "root"
+DB_PASSWORD = "kHPJBBeKyCVfZVXYtqqphugkbDWacctH"
+DB_NAME = "railway"
+
+def crear_conexion():
+    return mysql.connector.connect(
+        host=DB_HOST,
+        port=DB_PORT,
+        user=DB_USER,
+        password=DB_PASSWORD,
+        database=DB_NAME
+    )
+
+@app.route("/")
+def home():
+    return render_template("login.html")
+
+@app.route("/login", methods=["POST"])
+def login():
+    username = request.form.get("username")
+    password = request.form.get("password")
+
+    conn = crear_conexion()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM users WHERE username=%s AND password=%s", (username, password))
+    user = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    if user:
+        return f"✅ Bienvenido {user['username']}!"
+    else:
+        return "❌ Credenciales inválidas"
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
 
 # Constantes globales
 ARCHIVO_CONFIG = "configuracion_mensajes.json"
@@ -28,16 +71,6 @@ ARCHIVO_USUARIO = "usuario_quien_ingresa.json"
 # Configuración de la base de datos (Railway)
 # Configuración de la base de datos (Railway)
 
-
-# Rutas de autenticación
-@app.route("/", methods=["GET", "POST"])
-DB_HOST = "trolley.proxy.rlwy.net"
-DB_PORT = 27727
-DB_USER = "root"
-DB_PASSWORD = "kHPJBBeKyCVfZVXYtqqphugkbDWacctH"
-DB_NAME = "railway"
-
-# Configuración de conexión a la DB usando variables de entorno
 
 # Estructura de salones
 SALONES_POR_GRADO = {
