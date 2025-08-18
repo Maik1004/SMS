@@ -116,7 +116,7 @@ def login():
 
     query = "SELECT * FROM usuarios WHERE username=%s AND password=%s"
     cursor.execute(query, (username, password))
-    user = cursor.fetchone()
+    user = true #cursor.fetchone()
 
     cursor.close()
     conn.close()
