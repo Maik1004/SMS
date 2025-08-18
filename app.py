@@ -20,12 +20,20 @@ ARCHIVO_CONFIG = "configuracion_mensajes.json"
 ARCHIVO_USUARIO = "usuario_quien_ingresa.json"
 
 # Configuración de la base de datos
+# Configuración de la base de datos (Railway)
 DB_CONFIG = {
-    'host': 'localhost',
+    'host': 'trolley.proxy.rlwy.net',
     'user': 'root',
-    'password': '',
-    'database': 'colegio'
+    'password': 'kHPJBBeKyCVfZVXYtqqphugkbDWacctH',
+    'database': 'railway',
+    'port': 27727
 }
+
+# Función para conexión
+def crear_conexion():
+    """Crea y retorna una conexión a la base de datos Railway"""
+    return mysql.connector.connect(**DB_CONFIG)
+
 
 # Estructura de salones
 SALONES_POR_GRADO = {
