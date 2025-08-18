@@ -114,7 +114,7 @@ def login():
     conn = crear_conexion()
     cursor = conn.cursor(dictionary=True)
 
-    query = "SELECT * FROM users WHERE username=%s AND password=%s"
+    query = "SELECT * FROM userios WHERE username=%s AND password=%s"
     cursor.execute(query, (username, password))
     user = cursor.fetchone()
 
