@@ -127,7 +127,7 @@ def login():
     if user:
         return f"✅ Bienvenido {user['username']}!"
     else:
-        return "❌ Credenciales inválidassss"
+       return redirect(url_for("menu_principal"))
 
 
 
