@@ -22,39 +22,6 @@ DB_USER = "root"
 DB_PASSWORD = "kHPJBBeKyCVfZVXYtqqphugkbDWacctH"
 DB_NAME = "railway"
 
-def crear_conexion():
-    return mysql.connector.connect(
-        host=DB_HOST,
-        port=DB_PORT,
-        user=DB_USER,
-        password=DB_PASSWORD,
-        database=DB_NAME
-    )
-
-@app.route("/")
-def home():
-    return render_template("login.html")
-
-@app.route("/login", methods=["POST"])
-def login():
-    username = request.form.get("username")
-    password = request.form.get("password")
-
-    conn = crear_conexion()
-    cursor = conn.cursor(dictionary=True)
-
-    cursor.execute("SELECT * FROM users WHERE username=%s AND password=%s", (username, password))
-    user = cursor.fetchone()
-
-    cursor.close()
-    conn.close()
-
-    if user:
-        return f"✅ Bienvenido {user['username']}!"
-    else:
-        return "❌ Credenciales inválidas"
-
-
 # Constantes globales
 ARCHIVO_CONFIG = "configuracion_mensajes.json"
 ARCHIVO_USUARIO = "usuario_quien_ingresa.json"
