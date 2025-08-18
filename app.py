@@ -27,13 +27,22 @@ ARCHIVO_USUARIO = "usuario_quien_ingresa.json"
 # Configuración de la base de datos
 # Configuración de la base de datos (Railway)
 # Configuración de la base de datos (Railway)
-conn = mysql.connector.connect(
-    host=os.getenv("DB_HOST"),
-    user=os.getenv("DB_USER"),
-    password=os.getenv("DB_PASS"),
-    database=os.getenv("DB_NAME"),
-    port=os.getenv("DB_PORT")
-)
+
+
+# Configuración de conexión a la DB usando variables de entorno
+DB_CONFIG = {
+    "host": os.getenv("DB_HOST", "trolley.proxy.rlwy.net"),
+    "user": os.getenv("DB_USER", "root"),
+    "password": os.getenv("DB_PASS", "kHPJBBeKyCVfZVXYtqqphugkbDWacctH"),
+    "database": os.getenv("DB_NAME", "railway"),
+    "port": int(os.getenv("DB_PORT", 27727))
+}
+
+def crear_conexion():
+    return mysql.connector.connect(**DB_CONFIG)
+
+
+
 
 
 # Estructura de salones
