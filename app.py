@@ -54,9 +54,7 @@ def login():
     else:
         return "❌ Credenciales inválidas"
 
-# 🔥 Render lo ejecuta con gunicorn
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
 # Constantes globales
 ARCHIVO_CONFIG = "configuracion_mensajes.json"
 ARCHIVO_USUARIO = "usuario_quien_ingresa.json"
