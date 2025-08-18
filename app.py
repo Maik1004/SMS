@@ -116,7 +116,7 @@ def login():
 
     query = "SELECT * FROM usuarios WHERE username=%s AND password=%s"
     cursor.execute(query, (username, password))
-    user = true #cursor.fetchone()
+    user = cursor.fetchone()
 
     cursor.close()
     conn.close()
@@ -124,7 +124,7 @@ def login():
     if user:
         return f"✅ Bienvenido {user['username']}!"
     else:
-        return "❌ Credenciales inválidaaaas"
+        return "❌ Credenciales inválidassss"
 
 
 
