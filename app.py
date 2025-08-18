@@ -19,18 +19,6 @@ app = Flask(__name__)
 app.secret_key = "clave_secreta_segura"
 
 
-@app.route("/test-db")
-def test_db():
-    try:
-        conn = crear_conexion()
-        cursor = conn.cursor()
-        cursor.execute("SELECT NOW()")
-        result = cursor.fetchone()
-        cursor.close()
-        conn.close()
-        return f"✅ Conexión exitosa a Railway MySQL. Hora del servidor: {result[0]}"
-    except Exception as e:
-        return f"❌ Error conectando a Railway MySQL: {e}"
 
 # Constantes globales
 ARCHIVO_CONFIG = "configuracion_mensajes.json"
@@ -46,18 +34,22 @@ DB_CONFIG = {
     'database': 'railway',
     'port': 27727
 }
-
 def crear_conexion():
-    """Crea y retorna una conexión a la base de datos en Railway"""
-    try:
-        print("📡 Intentando conectar a MySQL Railway...")
-        conn = mysql.connector.connect(**DB_CONFIG)
-        print("✅ Conexión exitosa a MySQL Railway")
-        return conn
-    except mysql.connector.Error as err:
-        print(f"❌ Error al conectar a MySQL Railway: {err}")
-        raise
+    return mysql.connector.connect(**DB_CONFIG)
 
+# 👉 Ruta de prueba de conexión
+@app.route("/test-db")
+def test_db():
+    try:
+        conn = crear_conexion()
+        cursor = conn.cursor()
+        cursor.execute("SELECT NOW()")
+        result = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        return f"✅ Conexión exitosa a Railway MySQL. Hora del servidor: {result[0]}"
+    except Exception as e:
+        return f"❌ Error conectando a Railway MySQL: {e}"
 
 
 # Estructura de salones
