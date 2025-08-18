@@ -27,30 +27,21 @@ ARCHIVO_USUARIO = "usuario_quien_ingresa.json"
 # Configuración de la base de datos
 # Configuración de la base de datos (Railway)
 # Configuración de la base de datos (Railway)
-DB_CONFIG = {
-    'host': 'trolley.proxy.rlwy.net',
-    'user': 'root',
-    'password': 'kHPJBBeKyCVfZVXYtqqphugkbDWacctH',
-    'database': 'railway',
-    'port': 27727
-}
-def crear_conexion():
-    return mysql.connector.connect(**DB_CONFIG)
+conn = mysql.connector.connect(
+    host=os.getenv("DB_HOST"),
+    user=os.getenv("DB_USER"),
+    password=os.getenv("DB_PASS"),
+    database=os.getenv("DB_NAME"),
+    port=os.getenv("DB_PORT")
+)
 
-# 👉 Ruta de prueba de conexión
-@app.route("/test-db")
-def test_db():
-    try:
-        conn = crear_conexion()
-        cursor = conn.cursor()
-        cursor.execute("SELECT NOW()")
-        result = cursor.fetchone()
-        cursor.close()
-        conn.close()
-        return f"✅ Conexión exitosa a Railway MySQL. Hora del servidor: {result[0]}"
-    except Exception as e:
-        return f"❌ Error conectando a Railway MySQL: {e}"
-
+@app.route("/")
+def index():
+    cursor = conn.cursor()
+    cursor.execute("SELECT DATABASE();")
+    db_name = cursor.fetchone()
+    cursor.close()
+    return {"connected_to": db_name[0]}
 
 # Estructura de salones
 SALONES_POR_GRADO = {
