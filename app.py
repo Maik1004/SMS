@@ -29,6 +29,14 @@ ARCHIVO_USUARIO = "usuario_quien_ingresa.json"
 # Configuración de la base de datos (Railway)
 
 
+# Rutas de autenticación
+@app.route("/", methods=["GET", "POST"])
+DB_HOST = "trolley.proxy.rlwy.net"
+DB_PORT = 27727
+DB_USER = "root"
+DB_PASSWORD = "kHPJBBeKyCVfZVXYtqqphugkbDWacctH"
+DB_NAME = "railway"
+
 # Configuración de conexión a la DB usando variables de entorno
 
 # Estructura de salones
@@ -89,13 +97,7 @@ def guardar_configuracion(grado, salon, fecha_programada, mensaje=""):
     with open(ARCHIVO_CONFIG, "w", encoding="utf-8") as f:
         json.dump(config, f, indent=4, ensure_ascii=False)
 
-# Rutas de autenticación
-@app.route("/", methods=["GET", "POST"])
-DB_HOST = "trolley.proxy.rlwy.net"
-DB_PORT = 27727
-DB_USER = "root"
-DB_PASSWORD = "kHPJBBeKyCVfZVXYtqqphugkbDWacctH"
-DB_NAME = "railway"
+
 
 def crear_conexion():
     return mysql.connector.connect(
