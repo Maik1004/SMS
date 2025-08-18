@@ -35,13 +35,6 @@ conn = mysql.connector.connect(
     port=os.getenv("DB_PORT")
 )
 
-@app.route("/")
-def index():
-    cursor = conn.cursor()
-    cursor.execute("SELECT DATABASE();")
-    db_name = cursor.fetchone()
-    cursor.close()
-    return {"connected_to": db_name[0]}
 
 # Estructura de salones
 SALONES_POR_GRADO = {
