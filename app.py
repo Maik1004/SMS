@@ -21,6 +21,7 @@ ARCHIVO_USUARIO = "usuario_quien_ingresa.json"
 
 # Configuración de la base de datos
 # Configuración de la base de datos (Railway)
+# Configuración de la base de datos (Railway)
 DB_CONFIG = {
     'host': 'trolley.proxy.rlwy.net',
     'user': 'root',
@@ -29,10 +30,17 @@ DB_CONFIG = {
     'port': 27727
 }
 
-# Función para conexión
 def crear_conexion():
-    """Crea y retorna una conexión a la base de datos Railway"""
-    return mysql.connector.connect(**DB_CONFIG)
+    """Crea y retorna una conexión a la base de datos en Railway"""
+    try:
+        print("📡 Intentando conectar a MySQL Railway...")
+        conn = mysql.connector.connect(**DB_CONFIG)
+        print("✅ Conexión exitosa a MySQL Railway")
+        return conn
+    except mysql.connector.Error as err:
+        print(f"❌ Error al conectar a MySQL Railway: {err}")
+        raise
+
 
 
 # Estructura de salones
