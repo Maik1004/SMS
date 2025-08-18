@@ -460,7 +460,7 @@ def registro():
             cursor.execute("""
                 INSERT INTO usuarios (
                     username, password, email, fecha_registro,
-                    usuario_justVoip, contraseña_justVoip, numero_justVoip
+                    usuario_justVoip, contrasena_justVoip, numero_justVoip
                 )
                 VALUES (%s, %s, %s, NOW(), %s, %s, %s)
             """, (usuario, contrasena_hash, email, user_voip, pass_voip, numero_voip))
@@ -497,7 +497,7 @@ def enviar_sms_justvoip():
         conexion = crear_conexion()
         cursor = conexion.cursor()
         cursor.execute("""
-            SELECT usuario_justVoip, contraseña_justVoip, numero_justVoip
+            SELECT usuario_justVoip, contrasena_justVoip, numero_justVoip
             FROM usuarios WHERE username = %s
         """, (username_cargado,))
         datos_voip = cursor.fetchone()
