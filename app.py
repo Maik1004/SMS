@@ -12,6 +12,23 @@ import requests
 from flask import (Flask, flash, redirect, render_template, request,
                    send_from_directory, url_for)
 
+
+@app.route("/test-db")
+def test_db():
+    try:
+        conn = crear_conexion()
+        cursor = conn.cursor()
+        cursor.execute("SELECT NOW()")
+        result = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        return f"✅ Conexión exitosa a Railway MySQL. Hora del servidor: {result[0]}"
+    except Exception as e:
+        return f"❌ Error conectando a Railway MySQL: {e}"
+
+
+
+
 app = Flask(__name__)
 app.secret_key = "clave_secreta_segura"
 
