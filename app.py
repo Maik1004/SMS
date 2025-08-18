@@ -111,6 +111,9 @@ def login():
     username = request.form.get("username")
     password = request.form.get("password")
 
+    print("DEBUG => Usuario:", username, "Contraseña:", password)
+
+
     conn = crear_conexion()
     cursor = conn.cursor(dictionary=True)
 
