@@ -108,11 +108,10 @@ def home():
 # 🔑 Ruta de login
 @app.route("/login", methods=["POST"])
 def login():
-    username = request.form.get("username")
-    password = request.form.get("password")
+    username = request.form.get("usuario")
+    password = request.form.get("contrasena")
 
     print("DEBUG => Usuario:", username, "Contraseña:", password)
-
 
     conn = crear_conexion()
     cursor = conn.cursor(dictionary=True)
@@ -125,11 +124,9 @@ def login():
     conn.close()
 
     if user:
-        return f"✅ Bienvenido {user['username']}!"
+        return redirect(url_for("menu_principal"))  # ✅ Si login OK, va al menú
     else:
-       return redirect(url_for("menu_principal"))
-
-
+        return "❌ Credenciales inválidas"  # ✅ Si login falla, avisa
 
 @app.route("/menu")
 def menu_principal():
